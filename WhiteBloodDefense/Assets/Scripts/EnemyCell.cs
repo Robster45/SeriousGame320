@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Hello : MonoBehaviour
+public class EnemyCell : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
     {
-        // Jake is a bitch
+        
     }
 
     // Update is called once per frame
@@ -15,6 +15,4 @@ public class Hello : MonoBehaviour
     {
         
     }
-
-    //check
 }
