@@ -13,6 +13,11 @@ public class PlayerCell : Cell
     public Vector3 targetPoint;
     public bool aiMode;
 
+    //asset for player cell
+    public Sprite image;
+
+    public int id;
+
 
     // Start is called before the first frame update
     void Start()
