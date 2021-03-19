@@ -13,7 +13,7 @@ public class EnemyCell : Cell
     // Start is called before the first frame update
     void Start()
     {
-        checkCellTimer = 2f;
+        checkCellTimer = .5f;
     }
 
     // Update is called once per frame
@@ -26,7 +26,7 @@ public class EnemyCell : Cell
         if (checkCellTimer <= 0 && emScript.playerCells.Count != 0)
         {
             playerCell = FindNearestPlayerCell();
-            checkCellTimer = 2f;
+            checkCellTimer = .5f;
         }
     }
 
@@ -59,7 +59,7 @@ public class EnemyCell : Cell
             {
                 cDist = dist;
                 obj = emScript.playerCells[i].gameObject;
-                if (cDist <= 5)
+                if (cDist <= 25)
                 {
                     isFleeing = true;
                 }
