@@ -11,8 +11,6 @@ public class EntityManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        enemies = new List<EnemyCell>();
-        playerCells = new List<PlayerCell>();
     }
 
     // Update is called once per frame

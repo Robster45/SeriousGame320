@@ -38,7 +38,7 @@ public abstract class Cell : MonoBehaviour
 
             // updates gameobject vectors
             direction = velocity.normalized;
-            transform.forward = direction;
+            transform.up = direction;
             acceleration = Vector3.zero;
 
             // updates position
@@ -87,6 +87,33 @@ public abstract class Cell : MonoBehaviour
     {
         Cell script = target.GetComponent<Cell>();
         return Seek(script.position + (script.velocity * 2));
+    }
+
+    /// <summary>
+    /// Flee method going to be used by the enemies on their
+    /// way to the goal
+    /// </summary>
+    /// <param name="targetPosition"></param>
+    /// <returns></returns>
+    public Vector3 Flee(Vector3 targetPosition)
+    {
+        // Step 1: Find DV (desired velocity)
+        Vector3 desiredVelocity = position - targetPosition;
+
+        // Step 2: Scale vel to max speed
+        desiredVelocity.Normalize();
+        desiredVelocity = desiredVelocity * maxSpeed;
+
+        // Step 3:  Calculate seeking steering force
+        Vector3 seekingVelocity = desiredVelocity - velocity;
+
+        // Step 4: Return force
+        return seekingVelocity;
+    }
+
+    public Vector3 Flee(GameObject obj)
+    {
+        return Flee(obj.transform.position);
     }
 
     /// <summary>
