@@ -16,7 +16,7 @@ public class EnemyCell : Cell
     // Start is called before the first frame update
     void Start()
     {
-        checkCellTimer = .5f;
+        checkCellTimer = 1f;
     }
 
     // Update is called once per frame
@@ -29,7 +29,7 @@ public class EnemyCell : Cell
         if (checkCellTimer <= 0 && emScript.playerCells.Count != 0)
         {
             playerCell = FindNearestPlayerCell();
-            checkCellTimer = .5f;
+            checkCellTimer = 1f;
         }
     }
 
@@ -37,9 +37,9 @@ public class EnemyCell : Cell
     {
         Vector3 ultimate = Vector3.zero;
 
-        ultimate += Seek(goal);
+        ultimate += Seek(goal) * 2;
 
-        if (playerCell != null && isFleeing)
+        if (playerCell != null)
         { ultimate += Flee(playerCell); }
 
         ultimate.z = 0;
@@ -62,10 +62,6 @@ public class EnemyCell : Cell
             {
                 cDist = dist;
                 obj = emScript.playerCells[i].gameObject;
-                if (cDist <= 25)
-                {
-                    isFleeing = true;
-                }
             }
         }
 
