@@ -7,6 +7,7 @@ public class EntityManager : MonoBehaviour
     // lists of cells to keep track of
     public List<EnemyCell> enemies;
     public List<PlayerCell> playerCells;
+    //public  screen;
 
     public int wave;
 
@@ -14,7 +15,11 @@ public class EntityManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        //instantiate lists
+        enemies = new List<EnemyCell>();
+        playerCells = new List<PlayerCell>();
+        //clear the list just in case
+        playerCells.Clear();
     }
 
     // Update is called once per frame
@@ -27,7 +32,10 @@ public class EntityManager : MonoBehaviour
         }
     }
 
-
+    private void OnMouseDown()
+    {
+        playerCells.Add(new PlayerCell());
+    }
 
     void Spawn()
     {
