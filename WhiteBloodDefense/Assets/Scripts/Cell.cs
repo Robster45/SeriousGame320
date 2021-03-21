@@ -54,14 +54,14 @@ public abstract class Cell : MonoBehaviour
     /// <returns>Force calculated to seek target position</returns>
     public Vector3 Seek(Vector3 targetPosition)
     {
-        // Step 1: Find DV (desired velocity)
+        // Step 1: Find desired velocity
         Vector3 desiredVelocity = targetPosition - position;
 
         // Step 2: Scale vel to max speed
         desiredVelocity.Normalize();
         desiredVelocity = desiredVelocity * maxSpeed;
 
-        // Step 3:  Calculate seeking steering force
+        // Step 3: Calculate seeking steering force
         Vector3 seekingVelocity = desiredVelocity - velocity;
 
         // Step 4: Return force

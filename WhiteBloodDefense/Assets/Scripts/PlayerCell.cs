@@ -7,6 +7,7 @@ public class PlayerCell : Cell
     // used for killing enemies
     public float killTimer;
     public float maxKillTimer;
+    public int kills;
 
     // used for moving
     public EnemyCell targetCell;
@@ -34,14 +35,25 @@ public class PlayerCell : Cell
         // checks if the AI is on
         if (aiMode)
         {
-            // checks if it need to find a target
-            if (targetCell == null)
-            {
-                targetCell = FindClosestEnemy();
-            }
+            AIBehavior();
         }
     }
 
+    /// <summary>
+    /// The method that runs when the cell is in AI mode
+    /// </summary>
+    public virtual void AIBehavior()
+    {
+        // checks if it need to find a target
+        if (targetCell == null)
+        {
+            targetCell = FindClosestEnemy();
+        }
+    }
+
+    /// <summary>
+    /// Playercell override of the Calculate force method
+    /// </summary>
     public override void CalculateForces()
     {
         // temp vec to hold force
