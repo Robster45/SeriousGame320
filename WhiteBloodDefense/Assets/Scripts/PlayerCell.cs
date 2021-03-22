@@ -14,8 +14,6 @@ public class PlayerCell : Cell
     public Vector3 targetPoint;
     public bool aiMode;
 
-    public int id;
-
 
     // Start is called before the first frame update
     void Start()

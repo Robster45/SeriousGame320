@@ -8,8 +8,9 @@ public class EntityManager : MonoBehaviour
     public List<EnemyCell> enemies;
     public List<PlayerCell> playerCells;
     public PlayerCell selectedCell;
-    //public  screen;
-
+    public GameObject playerCellPrefab;
+    public GameObject enemyCellPrefab;
+    public Goal goal;
     public int wave;
 
 
@@ -22,11 +23,15 @@ public class EntityManager : MonoBehaviour
         //playerCells = new List<PlayerCell>();
         //clear the list just in case
         //playerCells.Clear();
+
+        wave = 2; //for testing
     }
+
 
     // Update is called once per frame
     void Update()
     {
+        NewPlayer();
         // for targeting cells
         if (Input.GetMouseButtonDown(0))
         {
@@ -63,35 +68,49 @@ public class EntityManager : MonoBehaviour
                 }
             }
         }
-
         // resets the cell to null so you can click elsewhere
         if (Input.GetMouseButtonDown(1))
         {
             selectedCell = null;
         }
-
         for(int i = 0; i < enemies.Count; i++)
         {
-            // check the enimies with the playercell
-            // the are keeping track of because its more effienct
-            // but make sure to check if the playercell is null
-            CheckCollide(enemies[i], enemies[i].playerCell.GetComponent<PlayerCell>());
+            if(enemies[i].playerCell == null)
+            {
+                CheckCollide(enemies[i], enemies[i].playerCell.GetComponent<PlayerCell>());
+            }
         }
     }
 
-    private void OnMouseDown()
+
+    /// <summary>
+    /// Creates a new player cell
+    /// </summary>
+    void NewPlayer()
     {
-        // you can't do this, you need to use the instantiate method
-        // so that you spawn an entire game obj, not just a 
-        // new instance of a script
-        
+        if(Input.GetKeyDown(KeyCode.C))
+        {
+            Vector3 tempPos = Input.mousePosition;
+            GameObject tempP = GameObject.Instantiate(playerCellPrefab, tempPos, Quaternion.identity);
+            //tempP.gameObject.transform.localScale = new Vector3((7/100), (7/100)); //it didnt like floats
+            playerCells.Add(tempP.GetComponent<PlayerCell>());
+        }
     }
 
+
+    /// <summary>
+    /// Method to spawn enemies
+    /// </summary>
     void Spawn()
     {
-        //code to spawn and maybe add into the list
-        //assign id number when spawned
+        //should only spawn equal amount to wave, I want it to spawn more tho in the future
+        for(int i = 0; i <= wave; i++)
+        {
+            GameObject tempE = GameObject.Instantiate(enemyCellPrefab, new Vector3(Random.Range(-9, 0), Random.Range(-5, 5)), Quaternion.identity);
+            enemies.Add(tempE.GetComponent<EnemyCell>());
+        }
     }
+
 
     /// <summary>
     /// Gets the script of the player obj that
@@ -112,6 +131,7 @@ public class EntityManager : MonoBehaviour
         return null;
     }
 
+
     /// <summary>
     /// Click method for the Enemy cells, gets the
     /// script of the obj of an enemy cell that 
@@ -128,19 +148,21 @@ public class EntityManager : MonoBehaviour
         return null;
     }
 
+
+    /// <summary>
+    /// Checks for collision between enemies and player cells
+    /// </summary>
+    /// <param name="enemy">Enemy cell to be checked</param>
+    /// <param name="player">Nearest Player Cell</param>
     void CheckCollide(EnemyCell enemy, PlayerCell player)
     {
-        // I would make this a game obj vrs game obj,
-        // that way you can check with circle colision (dist vs a radius)
-        // so that we don't need to mess with white space,
-        // we also need a way to test for the goal too
-        // P.S. I added 2dCircle colliders to all of the enemies
-        // and players so that I could click on them so maybe use those??
         if (Vector3.SqrMagnitude(enemy.transform.position - player.transform.position) <= enemy.GetComponent<CircleCollider2D>().radius)
         {
             enemy.isStopped = true;
             player.isStopped = true;
         }
-        //Vector3.sqrmagnitude(obj1.transform.pos - obj2.etc) <= MAthf.pow(obj1.GetComponent<CircleCollider2D>().radius, 2)
     }
+
+
+
 }
