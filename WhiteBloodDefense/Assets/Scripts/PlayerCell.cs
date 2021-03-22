@@ -14,9 +14,6 @@ public class PlayerCell : Cell
     public Vector3 targetPoint;
     public bool aiMode;
 
-    //asset for player cell
-    public Sprite image;
-
     public int id;
 
 

@@ -10,9 +10,6 @@ public class EnemyCell : Cell
     public bool isFleeing;
     public float checkCellTimer;
 
-    //Asset for enemy cell
-    public Sprite image;
-
     // Start is called before the first frame update
     void Start()
     {

@@ -16,6 +16,7 @@ public class EntityManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //for later
         //instantiate lists
         //enemies = new List<EnemyCell>();
         //playerCells = new List<PlayerCell>();
@@ -74,7 +75,7 @@ public class EntityManager : MonoBehaviour
             // check the enimies with the playercell
             // the are keeping track of because its more effienct
             // but make sure to check if the playercell is null
-            //CheckCollide(enemies[i], playerCells. )
+            CheckCollide(enemies[i], enemies[i].playerCell.GetComponent<PlayerCell>());
         }
     }
 
@@ -83,7 +84,7 @@ public class EntityManager : MonoBehaviour
         // you can't do this, you need to use the instantiate method
         // so that you spawn an entire game obj, not just a 
         // new instance of a script
-        playerCells.Add(new PlayerCell());
+        
     }
 
     void Spawn()
@@ -135,14 +136,11 @@ public class EntityManager : MonoBehaviour
         // we also need a way to test for the goal too
         // P.S. I added 2dCircle colliders to all of the enemies
         // and players so that I could click on them so maybe use those??
-        if (enemy.image.rect.Overlaps(player.image.rect))
+        if (Vector3.SqrMagnitude(enemy.transform.position - player.transform.position) <= enemy.GetComponent<CircleCollider2D>().radius)
         {
             enemy.isStopped = true;
             player.isStopped = true;
-
-            // Don't worry about this, gonna handle it
-            // in each cell file.
-            //player.maxKillTimer = 60;
         }
+        //Vector3.sqrmagnitude(obj1.transform.pos - obj2.etc) <= MAthf.pow(obj1.GetComponent<CircleCollider2D>().radius, 2)
     }
 }
