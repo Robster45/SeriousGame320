@@ -32,13 +32,7 @@ public class SceneController : MonoBehaviour
         //If youre on the Main menu
         if (SceneManager.GetActiveScene().buildIndex == 1)
         {
-            //adding on click functionality
-            Button startbtn = startButton.GetComponent<Button>();
-            startbtn.onClick.AddListener(changeToGameScene);
-            
-            //adding on click functionality
-            Button exitbtn = startButton.GetComponent<Button>();
-            exitbtn.onClick.AddListener(exitScene);
+            //button events
         }
 
         //If youre in the game
@@ -52,14 +46,8 @@ public class SceneController : MonoBehaviour
 
         //If youre on the pause menu
         if (SceneManager.GetActiveScene().buildIndex == 3)
-        {
-            //adding on click functionality
-            Button startbtn = startButton.GetComponent<Button>();
-            startbtn.onClick.AddListener(changeToGameScene);
-
-            //adding on click functionality
-            Button exitbtn = startButton.GetComponent<Button>();
-            exitbtn.onClick.AddListener(exitScene);
+        {          
+           //button
         }
     }
 
