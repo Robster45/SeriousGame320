@@ -104,7 +104,8 @@ MonoBehaviour:
   isStopped: 0
   managerObj: {fileID: 0}
   emScript: {fileID: 0}
-  killTimer: 0
+  ecoScript: {fileID: 0}
+  killTimer: 2
   maxKillTimer: 2
   kills: 0
   targetCell: {fileID: 0}

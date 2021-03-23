@@ -18,7 +18,12 @@ public class PlayerCell : Cell
     // Start is called before the first frame update
     void Start()
     {
-        //aiMode = false;
+        if (managerObj == null)
+        {
+            managerObj = GameObject.Find("Manager");
+            emScript = managerObj.GetComponent<EntityManager>();
+            ecoScript = managerObj.GetComponent<EconomyManager>();
+        }
     }
 
     // Update is called once per frame
@@ -32,6 +37,34 @@ public class PlayerCell : Cell
         {
             AIBehavior();
         }
+
+        if (kills == 3)
+        {
+            emScript.playerCells.Remove(this);
+            Destroy(this.gameObject);
+        }
+
+        if (isStopped)
+        {
+            killTimer -= Time.deltaTime;
+
+            if (killTimer <= 0)
+            {
+                kills++;
+                EnemyCell temp = targetCell;
+                emScript.enemies.Remove(temp);
+                Destroy(temp.gameObject); 
+                killTimer = maxKillTimer;
+                isStopped = false;
+                ecoScript.money++;
+            }
+
+            if (targetCell == null)
+            {
+                killTimer = maxKillTimer;
+                isStopped = false;
+            }
+        }
     }
 
     /// <summary>
@@ -43,6 +76,13 @@ public class PlayerCell : Cell
         if (targetCell == null)
         {
             targetCell = FindClosestEnemy();
+        }
+        else
+        {
+            if (targetCell.isStopped && !isStopped)
+            {
+                targetCell = null;
+            }
         }
     }
 

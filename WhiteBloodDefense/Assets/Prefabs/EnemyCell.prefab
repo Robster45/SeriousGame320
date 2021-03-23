@@ -95,7 +95,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b11b76312a6ea20489fbfaac88f31b61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 2
+  maxSpeed: 1.25
   mass: 0
   position: {x: 0, y: 0, z: 0}
   velocity: {x: 0, y: 0, z: 0}
@@ -108,7 +108,6 @@ MonoBehaviour:
   playerCell: {fileID: 0}
   isFleeing: 0
   checkCellTimer: 0
-  image: {fileID: 0}
 --- !u!58 &8563616849268063917
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -122,6 +121,6 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.5, y: 0}
   serializedVersion: 2
   m_Radius: 6
