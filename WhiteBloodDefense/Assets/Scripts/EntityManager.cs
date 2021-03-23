@@ -80,6 +80,11 @@ public class EntityManager : MonoBehaviour
                 CheckCollide(enemies[i], enemies[i].playerCell.GetComponent<PlayerCell>());
             }
         }
+
+        if(enemies.Count == 0)
+        {
+            EndWave();
+        }
     }
 
 
@@ -161,6 +166,18 @@ public class EntityManager : MonoBehaviour
             enemy.isStopped = true;
             player.isStopped = true;
         }
+    }
+
+    void BeginWave()
+    {
+        Spawn();
+    }
+
+    void EndWave()
+    {
+
+
+        wave++;
     }
 
 
