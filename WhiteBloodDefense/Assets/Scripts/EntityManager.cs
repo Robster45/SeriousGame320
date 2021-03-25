@@ -8,11 +8,10 @@ public class EntityManager : MonoBehaviour
     public List<EnemyCell> enemies;
     public List<PlayerCell> playerCells;
     public PlayerCell selectedCell;
-    public GameObject playerCellPrefab;
+    public List<GameObject> playerCellPrefabs;
     public GameObject enemyCellPrefab;
     public Goal goal;
     public int wave;
-
 
     // Start is called before the first frame update
     void Start()
@@ -24,14 +23,13 @@ public class EntityManager : MonoBehaviour
         //clear the list just in case
         //playerCells.Clear();
 
-        wave = 2; //for testing
+        wave = 0; //for testing
     }
 
 
     // Update is called once per frame
     void Update()
     {
-        NewPlayer();
         // for targeting cells
         if (Input.GetMouseButtonDown(0))
         {
@@ -73,17 +71,15 @@ public class EntityManager : MonoBehaviour
         {
             selectedCell = null;
         }
+
+        // loop that checks collision
         for(int i = 0; i < enemies.Count; i++)
         {
-            if(enemies[i].playerCell == null)
+            // checks if the playercell of that enemy exists
+            if(enemies[i].playerCell != null)
             {
                 CheckCollide(enemies[i], enemies[i].playerCell.GetComponent<PlayerCell>());
             }
-        }
-
-        if(enemies.Count == 0)
-        {
-            EndWave();
         }
     }
 
@@ -91,15 +87,16 @@ public class EntityManager : MonoBehaviour
     /// <summary>
     /// Creates a new player cell
     /// </summary>
-    void NewPlayer()
+    public void NewPlayer(int cellType)
     {
-        if(Input.GetKeyDown(KeyCode.C))
-        {
-            Vector3 tempPos = Input.mousePosition;
-            GameObject tempP = GameObject.Instantiate(playerCellPrefab, tempPos, Quaternion.identity);
-            //tempP.gameObject.transform.localScale = new Vector3((7/100), (7/100)); //it didnt like floats
-            playerCells.Add(tempP.GetComponent<PlayerCell>());
-        }
+        Vector3 tempPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        tempPos.z = 0;
+        GameObject tempP = GameObject.Instantiate(playerCellPrefabs[cellType], tempPos, Quaternion.identity);
+        PlayerCell script = tempP.GetComponent<PlayerCell>();
+        script.aiMode = true;
+        script.position = tempPos;
+        //tempP.gameObject.transform.localScale = new Vector3((7/100), (7/100)); //it didnt like floats
+        playerCells.Add(script);
     }
 
 
@@ -161,25 +158,11 @@ public class EntityManager : MonoBehaviour
     /// <param name="player">Nearest Player Cell</param>
     void CheckCollide(EnemyCell enemy, PlayerCell player)
     {
-        if (Vector3.SqrMagnitude(enemy.transform.position - player.transform.position) <= enemy.GetComponent<CircleCollider2D>().radius)
+        if (Vector3.SqrMagnitude(enemy.transform.position - player.transform.position) <= enemy.GetComponent<CircleCollider2D>().radius / 11)
         {
+            Debug.Log(Vector3.SqrMagnitude(enemy.transform.position - player.transform.position));
             enemy.isStopped = true;
             player.isStopped = true;
         }
     }
-
-    void BeginWave()
-    {
-        Spawn();
-    }
-
-    void EndWave()
-    {
-
-
-        wave++;
-    }
-
-
-
 }

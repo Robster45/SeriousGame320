@@ -16,11 +16,17 @@ public abstract class Cell : MonoBehaviour
     // manager stuff
     public GameObject managerObj;
     public EntityManager emScript;
+    public EconomyManager ecoScript;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        if (managerObj == null)
+        {
+            managerObj = GameObject.Find("Manager");
+            emScript = managerObj.GetComponent<EntityManager>();
+            ecoScript = managerObj.GetComponent<EconomyManager>();
+        }
     }
 
     // Update is called once per frame
