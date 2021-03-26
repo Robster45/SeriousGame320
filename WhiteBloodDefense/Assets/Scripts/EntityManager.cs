@@ -12,6 +12,8 @@ public class EntityManager : MonoBehaviour
     public GameObject enemyCellPrefab;
     public Goal goal;
     public int wave;
+    public float waitTimer;
+    public bool activeWave;
 
     // Start is called before the first frame update
     void Start()
@@ -24,12 +26,30 @@ public class EntityManager : MonoBehaviour
         //playerCells.Clear();
 
         wave = 0; //for testing
+        waitTimer = 0;
+        activeWave = false;
     }
 
 
     // Update is called once per frame
     void Update()
     {
+        //begin wave im not sure how to yet
+
+        if(enemies.Count == 0)
+        {
+            EndWave();
+        }
+        if (waitTimer > 0 && activeWave == false)
+        {
+            waitTimer -= Time.deltaTime;
+
+            if (waitTimer <= 0 && activeWave == false)
+            {
+                BeginWave();
+            }
+        }
+
         // for targeting cells
         if (Input.GetMouseButtonDown(0))
         {
@@ -103,7 +123,7 @@ public class EntityManager : MonoBehaviour
     /// <summary>
     /// Method to spawn enemies
     /// </summary>
-    void Spawn()
+    public void Spawn()
     {
         //should only spawn equal amount to wave, I want it to spawn more tho in the future
         for(int i = 0; i <= wave; i++)
@@ -156,7 +176,7 @@ public class EntityManager : MonoBehaviour
     /// </summary>
     /// <param name="enemy">Enemy cell to be checked</param>
     /// <param name="player">Nearest Player Cell</param>
-    void CheckCollide(EnemyCell enemy, PlayerCell player)
+    public void CheckCollide(EnemyCell enemy, PlayerCell player)
     {
         if (Vector3.SqrMagnitude(enemy.transform.position - player.transform.position) <= enemy.GetComponent<CircleCollider2D>().radius / 11)
         {
@@ -164,5 +184,21 @@ public class EntityManager : MonoBehaviour
             enemy.isStopped = true;
             player.isStopped = true;
         }
+    }
+
+    public void BeginWave()
+    {
+        Spawn();
+        playerCells.Clear();
+        activeWave = true;
+    }
+
+    public void EndWave()
+    {
+        enemies.Clear();
+        wave++;
+        waitTimer = 60;
+        activeWave = false;
+        //end wave code
     }
 }
