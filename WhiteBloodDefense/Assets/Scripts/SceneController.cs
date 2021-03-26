@@ -40,7 +40,7 @@ public class SceneController : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                changeToPauseScene();
+                SceneManager.LoadScene(3);
             }
         }
 
@@ -59,11 +59,6 @@ public class SceneController : MonoBehaviour
     public void changeToGameScene()
     {
         SceneManager.LoadScene(2);
-    }
-
-    public void changeToPauseScene()
-    {
-        SceneManager.LoadScene(3);
     }
 
     public void exitScene()
