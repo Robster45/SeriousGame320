@@ -126,7 +126,4 @@ public abstract class Cell : MonoBehaviour
     /// Calculates the forces of where the cell should go
     /// </summary>
     public abstract void CalculateForces();
-
-
-
 }

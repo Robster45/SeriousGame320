@@ -6,7 +6,6 @@ public class PlayerCell : Cell
 {
     // used for killing enemies
     public float killTimer;
-    public float maxKillTimer;
     public int kills;
 
     // used for moving
@@ -14,6 +13,8 @@ public class PlayerCell : Cell
     public Vector3 targetPoint;
     public bool aiMode;
 
+    // type
+    public CellType type;
 
     // Start is called before the first frame update
     void Start()
@@ -54,14 +55,12 @@ public class PlayerCell : Cell
                 EnemyCell temp = targetCell;
                 emScript.enemies.Remove(temp);
                 Destroy(temp.gameObject); 
-                killTimer = maxKillTimer;
                 isStopped = false;
                 ecoScript.money++;
             }
 
             if (targetCell == null)
             {
-                killTimer = maxKillTimer;
                 isStopped = false;
             }
         }
@@ -126,13 +125,48 @@ public class PlayerCell : Cell
         int count = emScript.enemies.Count;
         for (int i = 0; i < count; i++)
         {
+            switch (type)
+            {
+                case CellType.Neutrophil:
+                    if (emScript.enemies[i].type != EnemyType.Bacteria && emScript.enemies[i].type != EnemyType.Normal)
+                    { continue; }
+                    else if (currentCell == null)
+                    {
+                        currentDist = Vector3.SqrMagnitude(this.transform.position - emScript.enemies[i].transform.position);
+                        currentCell = emScript.enemies[i];
+                        continue;
+                    }
+                    break;
+
+                case CellType.Eosinophil:
+                    if (emScript.enemies[i].type != EnemyType.Paracyte && emScript.enemies[i].type != EnemyType.Normal)
+                    { continue; }
+                    else if (currentCell == null)
+                    {
+                        currentDist = Vector3.SqrMagnitude(this.transform.position - emScript.enemies[i].transform.position);
+                        currentCell = emScript.enemies[i];
+                        continue;
+                    }
+                    break;
+
+                case CellType.Basophil:
+                    if (emScript.enemies[i].type != EnemyType.Paracyte && emScript.enemies[i].type != EnemyType.Allergen)
+                    { continue; }
+                    else if (currentCell == null)
+                    {
+                        currentDist = Vector3.SqrMagnitude(this.transform.position - emScript.enemies[i].transform.position);
+                        currentCell = emScript.enemies[i];
+                        continue;
+                    }
+                    break;
+            }
+
             // gets the dist
             float dist = Vector3.SqrMagnitude(this.transform.position - emScript.enemies[i].transform.position);
 
-            // checks if first iteration
-            if (i == 0)
+            if (currentCell == null)
             {
-                currentDist = dist;
+                currentDist = Vector3.SqrMagnitude(this.transform.position - emScript.enemies[i].transform.position);
                 currentCell = emScript.enemies[i];
                 continue;
             }
@@ -147,5 +181,60 @@ public class PlayerCell : Cell
 
         // returns closest cell
         return currentCell;
+    }
+
+    /// <summary>
+    /// Sets the kill timer for the cell when it makes
+    /// contact with the enemy cell
+    /// </summary>
+    /// <param name="enemyType"></param>
+    public void SetKillTimer(EnemyType enemyType)
+    {
+        switch (type)
+        {
+            case CellType.Neutrophil:
+                if (enemyType != EnemyType.Bacteria)
+                {
+                    killTimer = 3.0f;
+                }
+                else if (enemyType != EnemyType.Normal)
+                {
+                    killTimer = 1.5f;
+                }
+                break;
+
+            case CellType.Eosinophil:
+                if (enemyType != EnemyType.Normal)
+                {
+                    killTimer = 1.0f;
+                }
+                else if (enemyType != EnemyType.Paracyte)
+                {
+                    killTimer = 3.0f;
+                }
+                break;
+
+            case CellType.Basophil:
+                if (enemyType != EnemyType.Paracyte)
+                {
+                    killTimer = 1.5f;
+                }
+                else if (enemyType != EnemyType.Allergen)
+                {
+                    killTimer = 3.0f;
+                }
+                break;
+
+            default:
+                if (enemyType != EnemyType.Normal)
+                {
+                    killTimer = 1.5f;
+                }
+                else
+                {
+                    killTimer = 4.0f;
+                }
+                break;
+        }
     }
 }

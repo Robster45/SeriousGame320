@@ -10,10 +10,20 @@ public class EnemyCell : Cell
     public bool isFleeing;
     public float checkCellTimer;
 
+    public EnemyType type;
+    public int strength;
+
     // Start is called before the first frame update
     void Start()
     {
         checkCellTimer = .5f;
+
+        if (managerObj == null)
+        {
+            managerObj = GameObject.Find("Manager");
+            emScript = managerObj.GetComponent<EntityManager>();
+            ecoScript = managerObj.GetComponent<EconomyManager>();
+        }
     }
 
     // Update is called once per frame
@@ -44,26 +54,29 @@ public class EnemyCell : Cell
         // a player cell to flee from
         if (playerCell != null)
         {
+            // checks the distance from their player cell
             float dist = Vector3.SqrMagnitude(this.transform.position - playerCell.transform.position);
             float scale = 0.0f;
 
-            if (dist < 1)
+            // scales the flee force based on the distance
+            if (dist < .5f)
             {
                 scale = 20.0f;
             }
-            else if (dist < 4)
+            else if (dist < 3)
             {
                 scale = 15.0f;
             }
-            else if (dist < 9)
+            else if (dist < 7)
             {
                 scale = 10.0f;
             }
-            else if (dist < 16)
+            else if (dist < 13)
             {
                 scale = 5.0f;
             }
 
+            // calls the flee force
             ultimate += Flee(playerCell) * scale;
         }
         else
@@ -92,6 +105,11 @@ public class EnemyCell : Cell
     /// <returns></returns>
     public GameObject FindNearestPlayerCell()
     {
+        if (emScript.playerCells.Count == 0)
+        {
+            return null;
+        }
+
         // sets the first element to the temp vars
         GameObject obj = emScript.playerCells[0].gameObject;
         float cDist = Vector3.SqrMagnitude(obj.transform.position - this.transform.position);

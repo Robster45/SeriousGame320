@@ -9,7 +9,7 @@ public class EntityManager : MonoBehaviour
     public List<PlayerCell> playerCells;
     public PlayerCell selectedCell;
     public List<GameObject> playerCellPrefabs;
-    public GameObject enemyCellPrefab;
+    public List<GameObject> enemyCellPrefabs;
     public Goal goal;
     public int wave;
     public float waitTimer;
@@ -26,7 +26,7 @@ public class EntityManager : MonoBehaviour
         //playerCells.Clear();
 
         wave = 0; //for testing
-        waitTimer = 0;
+        waitTimer = 60;
         activeWave = false;
     }
 
@@ -43,11 +43,10 @@ public class EntityManager : MonoBehaviour
         if (waitTimer > 0 && activeWave == false)
         {
             waitTimer -= Time.deltaTime;
-
-            if (waitTimer <= 0 && activeWave == false)
-            {
-                BeginWave();
-            }
+        }
+        if ((waitTimer <= 0 && activeWave == false) || Input.GetKeyDown(KeyCode.Return))
+        {
+            BeginWave();
         }
 
         // for targeting cells
@@ -96,7 +95,7 @@ public class EntityManager : MonoBehaviour
         for(int i = 0; i < enemies.Count; i++)
         {
             // checks if the playercell of that enemy exists
-            if(enemies[i].playerCell != null)
+            if(enemies[i].playerCell != null && !enemies[i].isStopped)
             {
                 CheckCollide(enemies[i], enemies[i].playerCell.GetComponent<PlayerCell>());
             }
@@ -128,8 +127,11 @@ public class EntityManager : MonoBehaviour
         //should only spawn equal amount to wave, I want it to spawn more tho in the future
         for(int i = 0; i <= wave; i++)
         {
-            GameObject tempE = GameObject.Instantiate(enemyCellPrefab, new Vector3(Random.Range(-9, 0), Random.Range(-5, 5)), Quaternion.identity);
-            enemies.Add(tempE.GetComponent<EnemyCell>());
+            GameObject tempE = Instantiate(enemyCellPrefabs[UnityEngine.Random.Range(0, enemyCellPrefabs.Count)], new Vector3(-9, Random.Range(-5, 5), 0), Quaternion.identity);
+            EnemyCell enemy = tempE.GetComponent<EnemyCell>();
+            enemy.goal = goal.goal;
+            enemy.position = enemy.transform.position;
+            enemies.Add(enemy);
         }
     }
 
@@ -139,7 +141,7 @@ public class EntityManager : MonoBehaviour
     /// was clicked so that it can be used for other things
     /// </summary>
     /// <returns>Player Cell's script</returns>
-    PlayerCell ClickedPlayer()
+    private PlayerCell ClickedPlayer()
     {
         // gets the collider
         Collider2D clicked_collider = Physics2D.OverlapPoint(Camera.main.ScreenToWorldPoint(Input.mousePosition));
@@ -160,7 +162,7 @@ public class EntityManager : MonoBehaviour
     /// was clicked
     /// </summary>
     /// <returns>Enemy Cell's script</returns>
-    EnemyCell ClickedEnemy()
+    private EnemyCell ClickedEnemy()
     {
         Collider2D clicked_collider = Physics2D.OverlapPoint(Camera.main.ScreenToWorldPoint(Input.mousePosition));
         if (clicked_collider != null)
@@ -178,27 +180,31 @@ public class EntityManager : MonoBehaviour
     /// <param name="player">Nearest Player Cell</param>
     public void CheckCollide(EnemyCell enemy, PlayerCell player)
     {
-        if (Vector3.SqrMagnitude(enemy.transform.position - player.transform.position) <= enemy.GetComponent<CircleCollider2D>().radius / 11)
+        if (Vector3.SqrMagnitude(enemy.transform.position - player.transform.position) <= enemy.GetComponent<CircleCollider2D>().radius / 20)
         {
             Debug.Log(Vector3.SqrMagnitude(enemy.transform.position - player.transform.position));
             enemy.isStopped = true;
             player.isStopped = true;
+            player.SetKillTimer(enemy.type);
         }
     }
 
     public void BeginWave()
     {
         Spawn();
-        playerCells.Clear();
+        //playerCells.Clear();
         activeWave = true;
     }
 
     public void EndWave()
     {
-        enemies.Clear();
-        wave++;
-        waitTimer = 60;
-        activeWave = false;
+        if (activeWave)
+        {
+            enemies.Clear();
+            wave++;
+            waitTimer = 60;
+            activeWave = false;
+        }
         //end wave code
     }
 }
