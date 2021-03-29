@@ -7,25 +7,23 @@ public class Goal : MonoBehaviour
     //health of the goal
     public int health;
     public GameObject goal;
-    public EntityManager EntityManager;
-    public int cellsLeft;
+    public int waveCount;
 
     // Start is called before the first frame update
     void Start()
     {
         health = 50;
+        waveCount = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
-        cellsLeft = EntityManager.enemies.Count;
-
         if(health <= 0)
         {
             GameLose();
         }
-        if (cellsLeft <= 0)
+        if (waveCount >= 10)
         {
             GameWin();
         }
