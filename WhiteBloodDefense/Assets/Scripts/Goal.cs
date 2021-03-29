@@ -6,7 +6,6 @@ public class Goal : MonoBehaviour
 {
     //health of the goal
     public int health;
-    public GameObject goal;
 
     // Start is called before the first frame update
     void Start()

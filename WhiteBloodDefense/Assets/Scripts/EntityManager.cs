@@ -11,6 +11,7 @@ public class EntityManager : MonoBehaviour
     public List<GameObject> playerCellPrefabs;
     public List<GameObject> enemyCellPrefabs;
     public Goal goal;
+    public BoxCollider2D goalCollider;
     public int wave;
     public float waitTimer;
     public bool activeWave;
@@ -28,6 +29,7 @@ public class EntityManager : MonoBehaviour
         wave = 0; //for testing
         waitTimer = 60;
         activeWave = false;
+        goalCollider = goal.gameObject.GetComponent<BoxCollider2D>();
     }
 
 
@@ -99,6 +101,14 @@ public class EntityManager : MonoBehaviour
             {
                 CheckCollide(enemies[i], enemies[i].playerCell.GetComponent<PlayerCell>());
             }
+
+            if (CheckGoal(enemies[i]))
+            {
+                goal.health -= 5;
+                EnemyCell enemy = enemies[i];
+                enemies.Remove(enemy);
+                Destroy(enemy.gameObject);
+            }
         }
     }
 
@@ -129,7 +139,7 @@ public class EntityManager : MonoBehaviour
         {
             GameObject tempE = Instantiate(enemyCellPrefabs[UnityEngine.Random.Range(0, enemyCellPrefabs.Count)], new Vector3(-9, Random.Range(-5, 5), 0), Quaternion.identity);
             EnemyCell enemy = tempE.GetComponent<EnemyCell>();
-            enemy.goal = goal.goal;
+            enemy.goal = goal.gameObject;
             enemy.position = enemy.transform.position;
             enemies.Add(enemy);
         }
@@ -206,5 +216,26 @@ public class EntityManager : MonoBehaviour
             activeWave = false;
         }
         //end wave code
+    }
+
+    /// <summary>
+    /// returns if the enemy is colliding
+    /// with the goal using the 2D colliders
+    /// </summary>
+    /// <param name="e"></param>
+    /// <returns></returns>
+    public bool CheckGoal(EnemyCell e)
+    {
+        CircleCollider2D circle = e.gameObject.GetComponent<CircleCollider2D>();
+
+        if (e.transform.position.x + circle.bounds.extents.x < goal.transform.position.x + goalCollider.bounds.extents.x &&
+            e.transform.position.y + circle.bounds.extents.y < goal.transform.position.y + goalCollider.bounds.extents.y &&
+            e.transform.position.x - circle.bounds.extents.x > goal.transform.position.x - goalCollider.bounds.extents.x &&
+            e.transform.position.y - circle.bounds.extents.y > goal.transform.position.y - goalCollider.bounds.extents.y)
+        {
+            return true;
+        }
+        //return Vector3.SqrMagnitude(e.gameObject.transform.position - goal.transform.position) <= circle.radius ? true : false;
+        return false;
     }
 }
