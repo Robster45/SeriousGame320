@@ -36,11 +36,11 @@ public class Goal : MonoBehaviour
 
     void GameWin()
     {
-
+        gameObject.GetComponent<SpriteRenderer>().color = Color.green;
     }
 
     void GameLose()
     {
-
+        gameObject.GetComponent<SpriteRenderer>().color = Color.red;
     }
 }
