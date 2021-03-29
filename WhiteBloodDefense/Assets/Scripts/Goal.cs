@@ -7,7 +7,6 @@ public class Goal : MonoBehaviour
     //health of the goal
     public int health;
     public GameObject goal;
-    public bool winGame;
     public EntityManager EntityManager;
     public int cellsLeft;
 
@@ -15,7 +14,6 @@ public class Goal : MonoBehaviour
     void Start()
     {
         health = 50;
-        winGame = false;
     }
 
     // Update is called once per frame
