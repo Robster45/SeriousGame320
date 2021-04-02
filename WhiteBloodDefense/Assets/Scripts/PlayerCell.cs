@@ -124,6 +124,7 @@ public class PlayerCell : Cell
         // temp vec to hold force
         Vector3 finalForce = Vector3.zero;
 
+        finalForce += Seperation();
 
         // checks if there is a target cell/position
         if (targetCell != null && !toPoint)
@@ -142,6 +143,23 @@ public class PlayerCell : Cell
 
         // adds to acceleration
         acceleration += finalForce;
+    }
+
+    public override Vector3 Seperation()
+    {
+        Vector3 sepForce = Vector3.zero;
+
+        foreach (PlayerCell p in emScript.playerCells)
+        {
+            float dist = Vector3.SqrMagnitude(p.transform.position - transform.position);
+
+            if (dist < .8f)
+            {
+                sepForce += Flee(p.gameObject) * .3f;
+            }
+        }
+
+        return sepForce * maxSpeed;
     }
 
     /// <summary>

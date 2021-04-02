@@ -71,21 +71,53 @@ public class EntityManager : MonoBehaviour
             {
                 // gets the enemy script if it clicked on an enemy obj
                 EnemyCell tempEnemy = ClickedEnemy();
+                bool properType = false;
 
                 // checks if they clicked an enemy
                 if (tempEnemy != null)
                 {
-                    // sets the player cell to target new enemy
-                    selectedCell.targetCell = tempEnemy;
-                    selectedCell.toPoint = false;
+                    switch (selectedCell.type)
+                    {
+                        case CellType.Neutrophil:
+                            if (tempEnemy.type == EnemyType.Normal || tempEnemy.type == EnemyType.Bacteria)
+                            {
+                                properType = true;
+                            }
+                            break;
+
+                        case CellType.Eosinophil:
+                            if (tempEnemy.type == EnemyType.Normal || tempEnemy.type == EnemyType.Paracyte)
+                            {
+                                properType = true;
+                            }
+                            break;
+
+                        case CellType.Basophil:
+                            if (tempEnemy.type == EnemyType.Paracyte || tempEnemy.type == EnemyType.Allergen)
+                            {
+                                properType = true;
+                            }
+                            break;
+
+                        default:
+                            properType = true;
+                            break;
+                    }
                 }
-                else
+                
+                if (!properType)
                 {
                     // formats the cell to target new point
                     selectedCell.targetPoint = pos;
                     selectedCell.targetPoint.z = 0;
                     selectedCell.targetCell = null;
                     selectedCell.toPoint = true;
+                }
+                else
+                {
+                    // sets the player cell to target new enemy
+                    selectedCell.targetCell = tempEnemy;
+                    selectedCell.toPoint = false;
                 }
             }
         }

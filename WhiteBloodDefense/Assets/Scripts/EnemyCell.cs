@@ -92,6 +92,8 @@ public class EnemyCell : Cell
             ultimate += Seek(new Vector3(transform.position.x, transform.position.y - 1.0f, 0)) * 20.0f;
         }
 
+        ultimate += Seperation();
+
         // gets the flee force if there is
         // a player cell to flee from
         if (playerCell != null)
@@ -130,6 +132,23 @@ public class EnemyCell : Cell
 
         // adds to acceleration
         acceleration += ultimate;
+    }
+
+    public override Vector3 Seperation()
+    {
+        Vector3 sepForce = Vector3.zero;
+
+        foreach (EnemyCell e in emScript.enemies)
+        {
+            float dist = Vector3.SqrMagnitude(e.transform.position - transform.position);
+
+            if (dist < 1f)
+            {
+                sepForce += Flee(e.gameObject) * .2f;
+            }
+        }
+
+        return sepForce * maxSpeed;
     }
 
     /// <summary>

@@ -98,4 +98,9 @@ public class SupportCell : Cell
         }
         return false;
     }
+
+    public override Vector3 Seperation()
+    {
+        throw new System.NotImplementedException();
+    }
 }
