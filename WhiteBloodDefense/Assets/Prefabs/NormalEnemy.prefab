@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 809581234877927382}
   - component: {fileID: 8563616849268063917}
   m_Layer: 0
-  m_Name: EnemyCell
+  m_Name: NormalEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -95,7 +95,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b11b76312a6ea20489fbfaac88f31b61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 1.25
+  maxSpeed: 1.1
   mass: 0
   position: {x: 0, y: 0, z: 0}
   velocity: {x: 0, y: 0, z: 0}
@@ -104,10 +104,13 @@ MonoBehaviour:
   isStopped: 0
   managerObj: {fileID: 0}
   emScript: {fileID: 0}
+  ecoScript: {fileID: 0}
   goal: {fileID: 0}
   playerCell: {fileID: 0}
   isFleeing: 0
   checkCellTimer: 0
+  type: 0
+  strength: 0
 --- !u!58 &8563616849268063917
 CircleCollider2D:
   m_ObjectHideFlags: 0

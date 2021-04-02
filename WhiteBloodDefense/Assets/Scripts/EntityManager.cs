@@ -27,7 +27,7 @@ public class EntityManager : MonoBehaviour
         //playerCells.Clear();
 
         wave = 0; //for testing
-        waitTimer = 60;
+        waitTimer = 30;
         activeWave = false;
         goalCollider = goal.gameObject.GetComponent<BoxCollider2D>();
     }
@@ -65,7 +65,7 @@ public class EntityManager : MonoBehaviour
             {
                 // sets to new player cell
                 selectedCell = tempPlayer;
-                selectedCell.aiMode = false;
+                //selectedCell.aiMode = false;
             }
             else if (selectedCell != null)
             {
@@ -77,6 +77,7 @@ public class EntityManager : MonoBehaviour
                 {
                     // sets the player cell to target new enemy
                     selectedCell.targetCell = tempEnemy;
+                    selectedCell.toPoint = false;
                 }
                 else
                 {
@@ -84,6 +85,7 @@ public class EntityManager : MonoBehaviour
                     selectedCell.targetPoint = pos;
                     selectedCell.targetPoint.z = 0;
                     selectedCell.targetCell = null;
+                    selectedCell.toPoint = true;
                 }
             }
         }
@@ -97,7 +99,7 @@ public class EntityManager : MonoBehaviour
         for(int i = 0; i < enemies.Count; i++)
         {
             // checks if the playercell of that enemy exists
-            if(enemies[i].playerCell != null && !enemies[i].isStopped)
+            if(enemies[i].playerCell != null && !enemies[i].isStopped && enemies[i].playerCell.GetComponent<PlayerCell>().targetCell == enemies[i])
             {
                 CheckCollide(enemies[i], enemies[i].playerCell.GetComponent<PlayerCell>());
             }
@@ -118,12 +120,13 @@ public class EntityManager : MonoBehaviour
     /// </summary>
     public void NewPlayer(int cellType)
     {
-        Vector3 tempPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        tempPos.z = 0;
-        GameObject tempP = GameObject.Instantiate(playerCellPrefabs[cellType], tempPos, Quaternion.identity);
+        // this is the bottom of the bone
+        Vector3 startPos = new Vector3(7.3f, -1.5f, 0.001f);//Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //tempPos.z = 0;
+        GameObject tempP = GameObject.Instantiate(playerCellPrefabs[cellType], startPos, Quaternion.identity);
         PlayerCell script = tempP.GetComponent<PlayerCell>();
-        script.aiMode = true;
-        script.position = tempPos;
+        //script.aiMode = true;
+        script.position = startPos;
         //tempP.gameObject.transform.localScale = new Vector3((7/100), (7/100)); //it didnt like floats
         playerCells.Add(script);
     }
@@ -137,7 +140,7 @@ public class EntityManager : MonoBehaviour
         //should only spawn equal amount to wave, I want it to spawn more tho in the future
         for(int i = 0; i <= wave; i++)
         {
-            GameObject tempE = Instantiate(enemyCellPrefabs[UnityEngine.Random.Range(0, enemyCellPrefabs.Count)], new Vector3(-9, Random.Range(-5, 5), 0), Quaternion.identity);
+            GameObject tempE = Instantiate(enemyCellPrefabs[UnityEngine.Random.Range(0, enemyCellPrefabs.Count)], new Vector3(-9f, Random.Range(-5f, 5f), 0.001f), Quaternion.identity);
             EnemyCell enemy = tempE.GetComponent<EnemyCell>();
             enemy.goal = goal.gameObject;
             enemy.position = enemy.transform.position;
@@ -204,6 +207,7 @@ public class EntityManager : MonoBehaviour
         Spawn();
         //playerCells.Clear();
         activeWave = true;
+
     }
 
     public void EndWave()
@@ -212,6 +216,7 @@ public class EntityManager : MonoBehaviour
         {
             enemies.Clear();
             wave++;
+            goal.waveCount = wave;
             waitTimer = 60;
             activeWave = false;
         }
