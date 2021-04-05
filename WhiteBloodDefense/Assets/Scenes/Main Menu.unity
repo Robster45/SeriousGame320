@@ -400,7 +400,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1501278039}
-        m_MethodName: changeToGameScene
+        m_MethodName: toTipScreen
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

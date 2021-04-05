@@ -49,6 +49,15 @@ public class SceneController : MonoBehaviour
         {          
             // button
         }
+
+        //If youre on the Tip menu
+        if (SceneManager.GetActiveScene().buildIndex == 4)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                changeToGameScene();
+            }
+        }
     }
 
     //SCENES: 
@@ -56,18 +65,19 @@ public class SceneController : MonoBehaviour
     // 1 - Main Menu
     // 2 - Game
     // 3 - Pause Menu
+    // 4 - Tip Menu
     public void changeToGameScene()
     {
         SceneManager.LoadScene(2);
     }
 
-    public void Unpause()
-    {
-        SceneManager.UnloadScene(SceneManager.GetActiveScene().buildIndex);
-    }
-
     public void exitScene()
     {
         Application.Quit();
+    }
+
+    public void toTipScreen()
+    {
+        SceneManager.LoadScene(4);
     }
 }
