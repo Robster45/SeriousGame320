@@ -26,7 +26,7 @@ public class EntityManager : MonoBehaviour
         //clear the list just in case
         //playerCells.Clear();
 
-        wave = 0; //for testing
+        //wave = 0; //for testing
         waitTimer = 60;
         activeWave = false;
         goalCollider = goal.gameObject.GetComponent<BoxCollider2D>();
