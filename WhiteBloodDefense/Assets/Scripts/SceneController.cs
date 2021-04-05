@@ -40,7 +40,7 @@ public class SceneController : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                SceneManager.LoadScene(3, LoadSceneMode.Additive);
+                SceneManager.LoadScene(3);
             }
         }
 
