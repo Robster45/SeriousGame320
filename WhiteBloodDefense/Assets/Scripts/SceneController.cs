@@ -40,14 +40,14 @@ public class SceneController : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                SceneManager.LoadScene(3);
+                SceneManager.LoadScene(3, LoadSceneMode.Additive);
             }
         }
 
         //If youre on the pause menu
         if (SceneManager.GetActiveScene().buildIndex == 3)
         {          
-           //button
+            // button
         }
     }
 
@@ -59,6 +59,11 @@ public class SceneController : MonoBehaviour
     public void changeToGameScene()
     {
         SceneManager.LoadScene(2);
+    }
+
+    public void Unpause()
+    {
+        SceneManager.UnloadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void exitScene()

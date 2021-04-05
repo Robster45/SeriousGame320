@@ -11,7 +11,11 @@ public class PlayerCell : Cell
     // used for moving
     public EnemyCell targetCell;
     public Vector3 targetPoint;
-    public bool aiMode;
+    public bool isWaiting;
+    public float waitTimer;
+
+    public CircleCollider2D circleCollider;
+    public bool toPoint;
 
     // type
     public CellType type;
@@ -25,19 +29,18 @@ public class PlayerCell : Cell
             emScript = managerObj.GetComponent<EntityManager>();
             ecoScript = managerObj.GetComponent<EconomyManager>();
         }
+
+        circleCollider = gameObject.GetComponent<CircleCollider2D>();
     }
 
     // Update is called once per frame
     new void Update()
     {
+   
         // runs cell update
         base.Update();
 
-        // checks if the AI is on
-        if (aiMode)
-        {
-            AIBehavior();
-        }
+        AIBehavior();
 
         if (kills == 3)
         {
@@ -71,16 +74,44 @@ public class PlayerCell : Cell
     /// </summary>
     public virtual void AIBehavior()
     {
-        // checks if it need to find a target
-        if (targetCell == null)
+        if (!isWaiting)
         {
-            targetCell = FindClosestEnemy();
+            if (toPoint)
+            {
+                if (Vector3.SqrMagnitude(transform.position - targetPoint) <= circleCollider.radius / 20)
+                {
+                    isWaiting = true;
+                    waitTimer = 1.5f;
+                    velocity = Vector3.zero;
+                }
+            }
+
+            // checks if it need to find a target
+            if (targetCell == null)
+            {
+                targetCell = FindClosestEnemy();
+
+                if (targetCell == null)
+                {
+                    toPoint = true;
+                }
+            }
+            else
+            {
+                if (targetCell.isStopped && !isStopped)
+                {
+                    targetCell = null;
+                }
+            }
         }
         else
         {
-            if (targetCell.isStopped && !isStopped)
+            waitTimer -= Time.deltaTime;
+            if (waitTimer <= 0)
             {
-                targetCell = null;
+                isWaiting = false;
+                targetCell = FindClosestEnemy();
+                toPoint = false;
             }
         }
     }
@@ -93,15 +124,18 @@ public class PlayerCell : Cell
         // temp vec to hold force
         Vector3 finalForce = Vector3.zero;
 
+        finalForce += Seperation();
+
         // checks if there is a target cell/position
-        if (targetCell != null)
+        if (targetCell != null && !toPoint)
         {
             finalForce += Pursue(targetCell.gameObject);
         }
-        else if (targetPoint != null)
+        else if (!isWaiting)
         {
             finalForce += Seek(targetPoint);
         }
+        
 
         // scales the force
         finalForce.z = 0;
@@ -109,6 +143,23 @@ public class PlayerCell : Cell
 
         // adds to acceleration
         acceleration += finalForce;
+    }
+
+    public override Vector3 Seperation()
+    {
+        Vector3 sepForce = Vector3.zero;
+
+        foreach (PlayerCell p in emScript.playerCells)
+        {
+            float dist = Vector3.SqrMagnitude(p.transform.position - transform.position);
+
+            if (dist < .8f)
+            {
+                sepForce += Flee(p.gameObject) * .3f;
+            }
+        }
+
+        return sepForce * maxSpeed;
     }
 
     /// <summary>
@@ -195,7 +246,7 @@ public class PlayerCell : Cell
             case CellType.Neutrophil:
                 if (enemyType != EnemyType.Bacteria)
                 {
-                    killTimer = 3.0f;
+                    killTimer = 2.0f;
                 }
                 else if (enemyType != EnemyType.Normal)
                 {
@@ -206,7 +257,7 @@ public class PlayerCell : Cell
             case CellType.Eosinophil:
                 if (enemyType != EnemyType.Normal)
                 {
-                    killTimer = 1.0f;
+                    killTimer = .5f;
                 }
                 else if (enemyType != EnemyType.Paracyte)
                 {
@@ -217,7 +268,7 @@ public class PlayerCell : Cell
             case CellType.Basophil:
                 if (enemyType != EnemyType.Paracyte)
                 {
-                    killTimer = 1.5f;
+                    killTimer = 2.0f;
                 }
                 else if (enemyType != EnemyType.Allergen)
                 {
@@ -226,9 +277,9 @@ public class PlayerCell : Cell
                 break;
 
             default:
-                if (enemyType != EnemyType.Normal)
+                if (enemyType == EnemyType.Normal)
                 {
-                    killTimer = 1.5f;
+                    killTimer = 2.0f;
                 }
                 else
                 {

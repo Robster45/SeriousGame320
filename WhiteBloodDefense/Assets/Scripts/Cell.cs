@@ -126,4 +126,11 @@ public abstract class Cell : MonoBehaviour
     /// Calculates the forces of where the cell should go
     /// </summary>
     public abstract void CalculateForces();
+
+    /// <summary>
+    /// Calculates the force needed to sperate from other
+    /// cells of the same type
+    /// </summary>
+    /// <returns></returns>
+    public abstract Vector3 Seperation();
 }

@@ -48,7 +48,51 @@ public class EnemyCell : Cell
         // sets defualt to zero
         Vector3 ultimate = Vector3.zero;
 
-        float seekScale = 3f;
+        // if the cell gets too close to the outside the map, it 
+        // will start to seek a point closer to the center
+        // X Position on left
+        if (transform.position.x < -7.5f)
+        {
+            ultimate += Seek(new Vector3(transform.position.x + 1.0f, transform.position.y, 0)) * 5.0f;
+        }
+        else if (transform.position.x < -8.5f)
+        {
+            ultimate += Seek(new Vector3(transform.position.x + 1.0f, transform.position.y, 0)) * 10.0f;
+        }
+        else if (transform.position.x <= -9.5f)
+        {
+            ultimate += Seek(new Vector3(transform.position.x + 1.0f, transform.position.y, 0)) * 20.0f;
+        }
+
+        // Y Position on the bottom
+        if (transform.position.y < -3.5f)
+        {
+            ultimate += Seek(new Vector3(transform.position.x, transform.position.y + 1.0f, 0)) * 5.0f;
+        }
+        else if (transform.position.y < -4.5f)
+        {
+            ultimate += Seek(new Vector3(transform.position.x, transform.position.y + 1.0f, 0)) * 10.0f;
+        }
+        else if (transform.position.y <= -5.0f)
+        {
+            ultimate += Seek(new Vector3(transform.position.x, transform.position.y + 1.0f, 0)) * 20.0f;
+        }
+
+        // Y Position on top
+        if (transform.position.y > 5.0f)
+        {
+            ultimate += Seek(new Vector3(transform.position.x, transform.position.y - 1.0f, 0)) * 5.0f;
+        }
+        else if (transform.position.y > 4.5f)
+        {
+            ultimate += Seek(new Vector3(transform.position.x, transform.position.y - 1.0f, 0)) * 10.0f;
+        }
+        else if (transform.position.y >= 3.5f)
+        {
+            ultimate += Seek(new Vector3(transform.position.x, transform.position.y - 1.0f, 0)) * 20.0f;
+        }
+
+        ultimate += Seperation();
 
         // gets the flee force if there is
         // a player cell to flee from
@@ -59,19 +103,15 @@ public class EnemyCell : Cell
             float scale = 0.0f;
 
             // scales the flee force based on the distance
-            if (dist < .5f)
+            if (dist < 1)
             {
                 scale = 20.0f;
             }
-            else if (dist < 3)
-            {
-                scale = 15.0f;
-            }
-            else if (dist < 7)
+            else if (dist < 4)
             {
                 scale = 10.0f;
             }
-            else if (dist < 13)
+            else if (dist < 9)
             {
                 scale = 5.0f;
             }
@@ -79,13 +119,9 @@ public class EnemyCell : Cell
             // calls the flee force
             ultimate += Flee(playerCell) * scale;
         }
-        else
-        {
-            seekScale = 10.0f;
-        }
 
         // finds the seek force
-        ultimate += Seek(goal) * seekScale;
+        ultimate += Seek(goal) * 5.0f;
 
         // makes sure the z value doesn't change
         ultimate.z = 0;
@@ -96,6 +132,23 @@ public class EnemyCell : Cell
 
         // adds to acceleration
         acceleration += ultimate;
+    }
+
+    public override Vector3 Seperation()
+    {
+        Vector3 sepForce = Vector3.zero;
+
+        foreach (EnemyCell e in emScript.enemies)
+        {
+            float dist = Vector3.SqrMagnitude(e.transform.position - transform.position);
+
+            if (dist < 1f)
+            {
+                sepForce += Flee(e.gameObject) * .2f;
+            }
+        }
+
+        return sepForce * maxSpeed;
     }
 
     /// <summary>

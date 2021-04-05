@@ -8,24 +8,29 @@ public class Goal : MonoBehaviour
     public int health;
     public GameObject goal;
     public int waveCount;
+    public bool hasEnded;
 
     // Start is called before the first frame update
     void Start()
     {
         health = 50;
-        waveCount = 0;
+
+        hasEnded = false;
+        //waveCount = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(health <= 0)
+        if(health <= 0 && !hasEnded)
         {
             GameLose();
+            hasEnded = true;
         }
-        if (waveCount >= 10)
+        else if (waveCount >= 10 && !hasEnded)
         {
             GameWin();
+            hasEnded = true;
         }
     }
 
@@ -37,10 +42,14 @@ public class Goal : MonoBehaviour
     void GameWin()
     {
         gameObject.GetComponent<SpriteRenderer>().color = Color.green;
+
+        // put scene changing here?
     }
 
     void GameLose()
     {
         gameObject.GetComponent<SpriteRenderer>().color = Color.red;
+
+        // put scene changing here?
     }
 }
