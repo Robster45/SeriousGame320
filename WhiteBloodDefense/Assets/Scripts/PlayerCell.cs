@@ -60,6 +60,8 @@ public class PlayerCell : Cell
                 Destroy(temp.gameObject); 
                 isStopped = false;
                 ecoScript.money++;
+                emScript.stats[0]++;
+                emScript.stats[2]++;
             }
 
             if (targetCell == null)

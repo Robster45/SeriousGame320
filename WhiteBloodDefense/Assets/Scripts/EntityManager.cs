@@ -15,6 +15,7 @@ public class EntityManager : MonoBehaviour
     public int wave;
     public float waitTimer;
     public bool activeWave;
+    public int[] stats;
 
     // Start is called before the first frame update
     void Start()
@@ -26,10 +27,12 @@ public class EntityManager : MonoBehaviour
         //clear the list just in case
         //playerCells.Clear();
 
-        wave = 0; //for testing
+        //wave = 0; //for testing
         waitTimer = 30;
         activeWave = false;
         goalCollider = goal.gameObject.GetComponent<BoxCollider2D>();
+        stats = new int[3]; //total money //cells bought //enemies killed
+        stats[0] = 5;
     }
 
 
@@ -161,6 +164,7 @@ public class EntityManager : MonoBehaviour
         script.position = startPos;
         //tempP.gameObject.transform.localScale = new Vector3((7/100), (7/100)); //it didnt like floats
         playerCells.Add(script);
+        stats[1]++;
     }
 
 
@@ -239,7 +243,6 @@ public class EntityManager : MonoBehaviour
         Spawn();
         //playerCells.Clear();
         activeWave = true;
-
     }
 
     public void EndWave()
@@ -251,6 +254,8 @@ public class EntityManager : MonoBehaviour
             goal.waveCount = wave;
             waitTimer = 60;
             activeWave = false;
+            gameObject.GetComponent<EconomyManager>().money += 2;
+            stats[0] += 2;
         }
         //end wave code
     }
